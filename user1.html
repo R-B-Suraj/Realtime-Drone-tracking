@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.2/socket.io.js"></script>
+    <title>user 1</title>
+
+    <script type="text/javascript">
+        let socket = io.connect('http://localhost:8080');
+        socket.emit('group',{grp: 'user', id: 1});
+        // droneid -> div
+        const drones = new Map();
+    </script>
+
+    <style>
+        div.container{
+            height: 100%;
+            width: 100%;
+        }
+
+        div.a{
+            width: 50px;
+            height:50px;
+            background-color:red;
+            position:fixed;
+            color: white;
+            font-size: 30px;    
+            text-align: center;
+            }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+    </div>
+    
+    
+<script type="text/javascript" crossorigin="anonymous">
+        
+    const container =  document.querySelector('.container');  
+    socket.on('newpos',(data)=>{
+        // data -> droneid, top, left
+        let dr;
+        if(!drones.has(data.id)){
+            dr = document.createElement('div');
+            dr.classList.add('a');
+            dr.innerText= data.id;
+            container.appendChild(dr);
+            drones.set(data.id,dr);
+        }
+        else{
+            dr = drones.get(data.id);
+        }
+        dr.style.top = data.top;
+        dr.style.left = data.left;
+        
+    })
+
+</script>
+
+</body>
+</html>

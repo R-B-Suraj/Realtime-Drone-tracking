@@ -1,0 +1,12 @@
+userid  droneid
+1       2,5       
+2       1
+3       3,4
+
+
+droneid userid 
+1       2
+2       1
+3       3
+4       3
+5       1

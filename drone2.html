@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.2/socket.io.js"></script>
+    <title>drone 2</title>
+
+    <script type="text/javascript" crossorigin="anonymous">
+        let socket = io.connect('http://localhost:8080');
+        socket.emit('group',{grp: 'drone', id: 2});
+        
+    </script>
+
+    <style>
+        div.a {
+            width: 50px;
+            height:50px;
+            background-color:red;
+            position:fixed;
+            color: white;
+            font-size: 30px;
+            text-align: center;     
+            }
+
+    </style>
+</head>
+<body>
+    
+    <div class='a'>2</div>
+
+
+<script type="text/javascript" crossorigin="anonymous">
+        
+        $(document).ready(function(){
+            animateDiv();
+            
+        });
+
+        const drone= document.querySelector('.a')
+
+        function makeNewPosition(){
+            
+            // Get viewport dimensions (remove the dimension of the div)
+            let h = $(window).height() - 50;
+            let w = $(window).width() - 50;
+            
+            let nh = Math.floor(Math.random() * h);
+            let nw = Math.floor(Math.random() * w);
+            
+            return [nh,nw];    
+
+        }
+
+        function animateDiv(){
+            let newq = makeNewPosition();
+            let oldq = $('.a').offset();
+            let speed = calcSpeed([oldq.top, oldq.left], newq);
+            
+            $('.a').animate({ top: newq[0], left: newq[1] }, speed, function(){
+            animateDiv();        
+            });
+            
+        };
+
+        function calcSpeed(prev, next) {
+            
+            let x = Math.abs(prev[1] - next[1]);
+            let y = Math.abs(prev[0] - next[0]);
+            
+            let greatest = x > y ? x : y;
+            
+            let speedModifier = 0.1;
+
+            let speed = Math.ceil(greatest/speedModifier);
+
+            return speed;
+
+        }        
+
+        setInterval(()=>{
+            socket.emit('pos',{id:2, top: drone.style.top, left: drone.style.left})
+        },50)
+
+        
+</script>
+
+</body>
+</html>
